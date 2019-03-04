@@ -24,9 +24,9 @@ public class MainGameClass extends ApplicationAdapter {
 	private float y;
 	private float x;
 
-	float angle = 90;
+	private float angle = 90;
 
-	static final int SPEED_FACTOR = 15;
+	private static final int SPEED_FACTOR = 15;
 
 
 	BitmapFont font;
@@ -60,8 +60,6 @@ public class MainGameClass extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-
-
 
 
 		if (y < Gdx.graphics.getHeight() - ball.getHeight() - SPEED_FACTOR) {
