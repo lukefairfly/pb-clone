@@ -28,6 +28,8 @@ public class MainGameClass extends ApplicationAdapter {
 
 	private static final int SPEED_FACTOR = 15;
 
+	private Sprite wall;
+
 
 	BitmapFont font;
 
@@ -45,10 +47,7 @@ public class MainGameClass extends ApplicationAdapter {
 
 		font = new BitmapFont();
 
-		x = Gdx.graphics.getWidth() / 2 - ball.getWidth() / 2;
-		y = 0;
-		ballSprite.setPosition(x,y);
-
+		resetBall();
 
 	}
 
@@ -61,18 +60,19 @@ public class MainGameClass extends ApplicationAdapter {
 
 		batch.begin();
 
-
 		if (y < Gdx.graphics.getHeight() - ball.getHeight() - SPEED_FACTOR) {
-
 			ballMovingFlag = true;
 			x += ( float ) ( Math.cos(Math.toRadians(angle)) * SPEED_FACTOR );
 			y += ( float ) ( Math.sin(Math.toRadians(angle)) * SPEED_FACTOR );
 		}
 		else {
 			ballMovingFlag = false;
+			wall = ballSprite;
+			ballSprite = new Sprite(ball);
 		}
 
-
+		// draw wall if present
+		if (wall != null) wall.draw(batch);
 
 
 		if(Gdx.input.isTouched()) {
@@ -80,21 +80,32 @@ public class MainGameClass extends ApplicationAdapter {
 			if (touchedX < Gdx.graphics.getWidth()/2) arrowSprite.setRotation(arrowSprite.getRotation()+1);
 			if (touchedX > Gdx.graphics.getWidth()/2) arrowSprite.setRotation(arrowSprite.getRotation()-1);
 			angle = 90+arrowSprite.getRotation();
-			x = Gdx.graphics.getWidth() / 2 - ball.getWidth() / 2;
-			y = 0;
+			resetBall();
 		}
+
+		// Angle text
+		// Todo: remove
 		font.draw(batch, String.valueOf(angle), 50, 160);
 
 
-		arrowSprite.setPosition(Gdx.graphics.getWidth() / 2 - arrow.getWidth() / 2  , 55);
-		ballSprite.setPosition(x,y);
+		// draw arrow
+		arrowSprite.setPosition(Gdx.graphics.getWidth() / (float)2 - arrow.getWidth() / (float)2  , 55);
 		arrowSprite.draw(batch);
+
+
+		ballSprite.setPosition(x,y);
+
 		ballSprite.draw(batch);
 
+
+
+		// detect ball collision
 		if (x <= 0 || x >= (Gdx.graphics.getWidth()-ball.getWidth())) {
 			angle = 180-angle;
 		}
 
+
+		//end batch
 		batch.end();
 	}
 
@@ -104,5 +115,11 @@ public class MainGameClass extends ApplicationAdapter {
 		ball.dispose();
 		arrow.dispose();
 
+	}
+
+	private void resetBall() {
+		x = Gdx.graphics.getWidth() / (float)2 - ball.getWidth() / (float)2;
+		y = 0;
+		ballSprite.setPosition(x,y);
 	}
 }
