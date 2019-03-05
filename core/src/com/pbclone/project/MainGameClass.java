@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
+
 public class MainGameClass extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Texture ball;
@@ -28,7 +30,7 @@ public class MainGameClass extends ApplicationAdapter {
 
 	private static final int SPEED_FACTOR = 15;
 
-	private Sprite wall;
+	private ArrayList<Sprite> wall;
 
 
 	BitmapFont font;
@@ -45,6 +47,11 @@ public class MainGameClass extends ApplicationAdapter {
 		arrowSprite = new Sprite(arrow);
 		ballSprite = new Sprite(ball);
 
+
+		wall = new ArrayList<Sprite>();
+
+
+
 		font = new BitmapFont();
 
 		resetBall();
@@ -55,10 +62,17 @@ public class MainGameClass extends ApplicationAdapter {
 	public void render () {
 
 		mCamera.update();
+
+
+		// Set Background
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
+
+
+
+
 
 		if (y < Gdx.graphics.getHeight() - ball.getHeight() - SPEED_FACTOR) {
 			ballMovingFlag = true;
@@ -67,12 +81,16 @@ public class MainGameClass extends ApplicationAdapter {
 		}
 		else {
 			ballMovingFlag = false;
-			wall = ballSprite;
+			wall.add(ballSprite);
 			ballSprite = new Sprite(ball);
 		}
 
 		// draw wall if present
-		if (wall != null) wall.draw(batch);
+		if (wall.size() != 0) {
+		    for (Sprite s : wall){
+		        s.draw(batch);
+		    }
+        }
 
 
 		if(Gdx.input.isTouched()) {
